@@ -1,30 +1,24 @@
-const express = require('express')
-const app = express()
-const mysql = require('mysql')
+const app = require('./app')
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'HostelManagement'
-})
-
+const connection = require('./src/db')
 connection.connect((err)=>{
     if(err){
         console.log('error', err)
         return
     }
-    
-
-    const sql = "select * from temp"
-    connection.query(sql, (err, result)=>{
-        if(err) throw err
-        console.log(result)
-    })
-
     console.log('connected')
 })
 
-app.listen(3001, ()=>{
-    console.log('Server is running')
+const PORT = process.env.PORT || 3001
+
+app.listen(PORT, ()=>{
+    console.log('Server is running on port', PORT)
 })
+
+process.on('unhandledRejection', err => {
+    console.log('UNHANDLED REJECTION!!!  shutting down ...');
+    console.log(err.name, err.message);
+    server.close(() => {
+        process.exit(1);
+    });
+});
