@@ -1,1 +1,10 @@
+
+POST http://localhost:3001/api/v1/customer/login
+content-type: application/json
+
+{
+    "phone_number": "9354891594",
+    "name": "shivesh tiwari"
+}
+
 GET http://localhost:3001/api/v1/customer
