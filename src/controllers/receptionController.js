@@ -64,7 +64,7 @@ exports.addCustomer = async (req, res, next) => {
                     if (result) {
                         res.send({ message: message.success, data: result })
                     } else {
-                        res.send({ message: message.noData })
+                        res.send({ message: message.failed })
                     }
                 })
             }
@@ -72,6 +72,21 @@ exports.addCustomer = async (req, res, next) => {
         })
 
     } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.getCustomer = async (req, res, next) => {
+    try{
+        const query = 'SELECT * FROM CUSTOMER;'
+        db.query(query, (error, result)=>{
+            if (result) {
+                res.send({ message: message.success, data: result })
+            } else {
+                res.send({ message: message.noData })
+            }
+        })
+    } catch(error){
         console.log(error)
     }
 }
@@ -87,7 +102,7 @@ const newAddress = async (address, callback = () => { }) => {
 
 const updateRoom = async (room, status, callback = () => { }) => {
     const query = `UPDATE ROOM SET IsOccupied=${status ? 0 : 1} WHERE RoomNo=${room}`
-    console.log('query', query)
+
     db.query(query, (error, result, fields) => {
         callback(result ? 1 : 0)
     })
