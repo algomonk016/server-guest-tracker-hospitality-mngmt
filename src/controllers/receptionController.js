@@ -65,6 +65,7 @@ exports.addCustomer = async (req, res, next) => {
                     if (result) {
                         res.send({ message: message.success, data: result })
                     } else {
+                        console.log(error)
                         res.send({ message: message.failed })
                     }
                 })
@@ -107,7 +108,7 @@ exports.checkoutCustomer = async (req, res, next) => {
         await getCustomer(id, 'CUSTOMER', async (Cust) => {
             Cust = Cust[0]
             const TimeStayed = stayedTime(Cust.InTime, OutTime)
-            const Cost = price * TimeStayed.totalHours
+            const Cost = price * Math.max(1, TimeStayed.totalHours)
             
             userDetails = [
                 Cust.CustId,
