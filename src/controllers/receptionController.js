@@ -21,9 +21,11 @@ exports.login = async (req, res, next) => {
 exports.showRooms = async (req, res, next) => {
     try {
         const query = "SELECT * FROM ROOM"
-        db.query(query, (error, result) => {
+        db.query(query, async (error, result) => {
             if (result) {
-                res.send({ message: message.success, data: result })
+                getAvailableCount((roomCount) => {
+                    res.send(roomCount ? { message: message.success, data: result, roomCount: roomCount } : {message: message.failed})
+                })
             } else {
                 res.send({ message: message.noData })
             }
@@ -235,5 +237,12 @@ const getRoomPrice = async(roomNo, callback = () => {}) => {
     db.query(query, (error, result, fields) => {
         console.log('result', result)
         callback(result ? result[0].Cost : -1)
+    })
+}
+
+const getAvailableCount = async ( callback = () => {} ) => {
+    const query = 'SELECT COUNT(RoomNo) FROM ROOM WHERE IsOccupied=0';
+    db.query(query, (error, result) => {
+        callback(result[0]['COUNT(RoomNo)'])
     })
 }
