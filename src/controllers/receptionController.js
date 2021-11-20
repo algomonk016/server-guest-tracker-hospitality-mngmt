@@ -92,6 +92,21 @@ exports.getCustomers = async (req, res, next) => {
     }
 }
 
+exports.getCheckedOutCustomers = async (req, res, next) => {
+    try{
+        const query = 'SELECT * FROM CUSTOMER_LEAVE;'
+        db.query(query, (error, result)=>{
+            if (result) {
+                res.send({ message: message.success, data: result })
+            } else {
+                res.send({ message: message.noData })
+            }
+        })
+    } catch(error){
+        console.log(error)
+    }
+}
+
 exports.checkoutCustomer = async (req, res, next) => {
     try{
         const id = req?.params?.id
@@ -99,7 +114,6 @@ exports.checkoutCustomer = async (req, res, next) => {
         const OutTime = new Date()
         let userDetails = []
         let price = 0
-        
         await getRoomPrice(room, (result) => {
             price = result
         })
@@ -161,6 +175,18 @@ exports.checkoutCustomer = async (req, res, next) => {
     } catch(error){
 
     }
+}
+
+exports.getFeedback = async (req, res, field) => {
+    try{
+        const query = "SELECT * FROM FEEDBACK";
+        db.query(query, (error, result) => {
+            res.send({message: message.success, data: result})
+        })
+    } catch(error) {
+        res.send({message: message.failed})
+    }
+
 }
 
 const newAddress = async (address, callback = () => { }) => {
