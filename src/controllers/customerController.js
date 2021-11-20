@@ -1,4 +1,5 @@
 const db = require('../db/index')
+const message = require('../utils/message')
 
 exports.login = async (req, res, next) => {
     try{
@@ -6,9 +7,9 @@ exports.login = async (req, res, next) => {
         const query = `SELECT * FROM CUSTOMER WHERE CustId=${guestId}`
         db.query(query, (error, result) => {
             if(result){
-                res.send({message: 'success', data: result[0]})
+                res.send(result[0] ? { message: message.success, data: result[0] } : {message: message.noData})
             } else {
-                res.send({message: 'No result found'})
+                res.send({message: message.failed})
             }
          })
     } catch(error){
@@ -23,10 +24,9 @@ exports.addFeedback = async (req, res, next) => {
         const query = `INSERT INTO FEEDBACK (CustomerId, Name, RoomNo, Rating, Message) VALUES (?, ?, ?, ?, ?);`
         db.query(query, datasArray, (error, result, fields) => {
             if(result){
-                res.send({message: 'success', data: result})
+                res.send({message: message.success, data: result})
             } else{
-                // console.log('failed', error.message)
-                res.send({message: 'No'})
+                res.send({message: message.failed})
             }
         })
     } catch(error){
